@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cstdlib>
 using namespace std;
 
 const char Caracteres [] = {
@@ -18,6 +17,6 @@ int main(int argc, char **argv){
 }
 
 void shannon(int *F){
-    cout << "Holaaaa" << endl;
+    cout << "uwu" << endl;
 
 }
