@@ -84,14 +84,14 @@ void createArbol(string text ){
     /// imprime los codigos para cada simblo 
     unordered_map<char, string> CodeHuffman;
     encode(root, "", CodeHuffman); 
-    cout << "\n Los codigos de huffman \n" <<"\n";
+    cout << "\n Los codigos de Huffman: \n" <<"\n";
     for(auto pair: CodeHuffman){
         cout << pair.first <<  " " <<  pair.second << "\n";
     }
     
     //-------------------------------------------------------------------------------- 
 
-    cout << "\n el codigo original \n " << text <<"\n"; 
+    cout << "\n El codigo original: \n " << text <<"\n"; 
     string str = ""; 
     for(char symbol : text){
         str += CodeHuffman[symbol];
@@ -100,10 +100,10 @@ void createArbol(string text ){
     //--------------------------------------------------------------------------------
 
 
-    cout << "\n el mensaje en binario es :  \n" << str << "\n";
+    cout << "\n El mensaje en binario es:  \n" << str << "\n";
     
     int index = -1; 
-    cout << "\n el texto decodificado  es: \n"; 
+    cout << "\n El texto decodificado es: \n"; 
     while (index < (int)str.size() -2 ){
         decode(root, index ,str);              // toma el codigo binario y de descomprime 
 
