@@ -37,8 +37,8 @@ class shannonF{
                     total++;
                 }
                 //------------------------------------------------------------------------------------------------------
-                tsize = (int)frequencyMap.size(); // cantidad de singnos distintos en el texto 
-                ptable = new Node[tsize];  // crea los nodos con la cantidad de signos que hay en en el texto
+                tsize = (int)frequencyMap.size(); // // cantidad de signos distintos en el texto
+                ptable = new Node[tsize];  // crea los nodos con la cantidad de signos que hay  en el texto
                 ftot = float(total);
                 map<char, int>::iterator fi;
                 for (fi = frequencyMap.begin(), i = 0; fi != frequencyMap.end(); ++fi, ++i)
@@ -65,17 +65,5 @@ class shannonF{
 
 
 
-
-
-// static int compare_probs(const void *elem1, const void *elem2){ 
-
-// 	const  Node a = *(Node *)elem1;
-// 	const Node b = *(Node *)elem2;
-// 	if (a.p < b.p)
-// 		return 1;
-// 	else if (a.p > b.p)
-// 		return -1;
-// 	return 0;
-// }
 
 
