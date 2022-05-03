@@ -1,5 +1,8 @@
 #include <iostream>
 #include <fstream>
+#include <string> 
+#include "huffman.h" 
+#include "shannon.h" 
 using namespace std;
 
 void leerArchivo(string text);
