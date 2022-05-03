@@ -1,22 +1,28 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
 
-const char Caracteres [] = {
-
-};
-const char Adn [4] { 'A', 'G', 'T', 'C'};
-
-void shannon(int *F);
+void leerArchivo(string text);
 
 int main(int argc, char **argv){
-    int F[10];
 
-    shannon(F);
-
+    leerArchivo("english.100MB");
 	return EXIT_SUCCESS;
 }
 
-void shannon(int *F){
-    cout << "uwu" << endl;
+void leerArchivo(string text){
 
+    ifstream archivo;
+    archivo.open("archivos/" + text,ios::in);
+    string linea;
+
+    if(archivo.fail()){
+        cout << "Error" << endl;
+        exit(1);
+    }
+    while(!archivo.eof()){
+        getline(archivo,linea);
+        cout << linea << endl;
+    }
+    archivo.close();
 }
