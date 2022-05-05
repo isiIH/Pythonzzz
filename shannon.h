@@ -41,6 +41,21 @@ vector<Node> obtenerProb(string texto){
     return v;
 }
 
+/* void encode(vector<Node> v, int l, int r) {
+    if(l<r){
+        int x, y;
+        x = l;
+        y = r;
+        particion(v, &l, &r, v[l].probabilidad, v[r].probabilidad);
+        for(int i=0; i<=l; i++){
+            v[i].bitstream
+        }
+        cout << "l: " << l << ", r: " << r << endl;
+        encode(v,x,l);
+        encode(v,r,y);
+    }
+} */
+
 void particion(vector<Node> v, int *l, int *r, double lprob, double rprob){
     cout << *l << " " << *r << endl;
     cout << "rprob: " << rprob << endl;
