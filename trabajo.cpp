@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string> 
+#include <vector>
+#include <algorithm>
 #include "huffman.h" 
 #include "shannon.h" 
 using namespace std;
@@ -9,23 +11,21 @@ void leerArchivo(string text);
 
 int main(int argc, char **argv){
 
-    leerArchivo("english.100MB");
-	return EXIT_SUCCESS;
-}
-
-void leerArchivo(string text){
-
-    ifstream archivo;
-    archivo.open("archivos/" + text,ios::in);
-    string linea;
+    /* ifstream archivo;
+    archivo.open("archivos/prueba.txt",ios::in);
+    char letra;
 
     if(archivo.fail()){
         cout << "Error" << endl;
         exit(1);
     }
     while(!archivo.eof()){
-        getline(archivo,linea);
-        cout << linea << endl;
+        archivo >> letra;
+
     }
-    archivo.close();
+    archivo.close(); */
+
+    string texto = "prueba.txt";
+    vector<Node> v = obtenerProb(texto);
+	return EXIT_SUCCESS;
 }
