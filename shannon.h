@@ -2,12 +2,12 @@
 #include <vector>
 #include <string>
 #include <map>
-#include<algorithm>
 using namespace std;
 
 struct Node {
     char simbolo;
     double probabilidad;
+    int bitstream[]; 
 };
 
 vector<Node> obtenerProb(string texto){
@@ -26,8 +26,7 @@ vector<Node> obtenerProb(string texto){
         cout << "Error" << endl;
         exit(1);
     }
-    while(!archivo.eof()){
-        archivo >> letra;
+    while(archivo >> noskipws >> letra){
         prob[letra]++;
         total++;
     }
@@ -39,13 +38,31 @@ vector<Node> obtenerProb(string texto){
         v.push_back(s);
     }
 
+    return v;
+}
+
+void particion(vector<Node> v, int *l, int *r, double lprob, double rprob){
+    cout << *l << " " << *r << endl;
+    cout << "rprob: " << rprob << endl;
+    cout << "lprob: " << lprob << endl;
+    if(*l != *r-1){
+        if(lprob > rprob){
+            *r -= 1;
+            rprob += v[*r].probabilidad;
+        } else {
+            *l += 1;
+            lprob += v[*l].probabilidad;
+        }
+        particion(v,l,r,lprob,rprob);
+    }
+}
+
+void imprimirSimbolos(vector<Node> v){
     double suma = 0.0;
-    for (i = 0; i < v.size(); i++){
+    for (int i = 0; i < v.size(); i++){
         cout << v[i].simbolo << " " << v[i].probabilidad << endl;
         suma = suma + v[i].probabilidad;
     }
     cout << "suma: " << suma << endl; 
-
-    return v;
 }
 

@@ -27,5 +27,14 @@ int main(int argc, char **argv){
 
     string texto = "prueba.txt";
     vector<Node> v = obtenerProb(texto);
+/*     imprimirSimbolos(v);
+    cout << endl; */
+    sort(v.begin(), v.end(), [] (Node &x, Node &y) { return x.probabilidad > y.probabilidad; });
+    imprimirSimbolos(v);
+
+    int l = 0;
+    int r = v.size() - 1;
+    particion(v, &l, &r, v[l].probabilidad, v[r].probabilidad);
+    cout << "l: " << l << ", r: " << r << endl;
 	return EXIT_SUCCESS;
 }
