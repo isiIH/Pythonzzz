@@ -64,8 +64,8 @@ void encode(vector<Node> &v, int l, int r) {
 
 void particion(vector<Node> v, int *l, int *r, double lprob, double rprob){
     /* cout << *l << " " << *r << endl;
-    cout << "rprob: " << rprob << endl;
-    cout << "lprob: " << lprob << endl; */
+    cout << "lprob: " << lprob << endl;
+    cout << "rprob: " << rprob << endl; */
     if(*l != *r-1){
         if(lprob > rprob){
             *r -= 1;
