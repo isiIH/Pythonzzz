@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <algorithm>
 using namespace std;
 
 struct Node {
@@ -13,6 +14,8 @@ struct Node {
 void obtenerProb(vector<Node> &v, string texto);
 void encode(vector<Node> &v, int l, int r);
 void particion(vector<Node> v, int *l, int *r, double lprob, double rprob);
+void crearCodificado(vector<Node> v, string text);
+void decode(vector<Node> v, string text);
 void imprimirSimbolos(vector<Node> v);
 
 void obtenerProb(vector<Node> &v, string texto){
@@ -76,6 +79,35 @@ void particion(vector<Node> v, int *l, int *r, double lprob, double rprob){
         }
         particion(v,l,r,lprob,rprob);
     }
+}
+
+void crearCodificado(vector<Node> v, string text){
+    ifstream archivo;
+    ofstream archivoMod;
+    archivo.open("archivos/" + text, ios::in);
+    archivoMod.open("archivos/codificado.txt");
+    char letra;
+
+    if(archivo.fail()){
+        cout << "Error" << endl;
+        exit(1);
+    }
+
+    map<char, string> CodeShannon;
+    for(int i=0; i<v.size(); i++){
+        CodeShannon[v[i].simbolo] = v[i].bitstream;
+    }
+
+    while(archivo >> noskipws >> letra){
+        archivoMod << CodeShannon[letra];
+    }
+    cout << "Se ha creado el archivo codificado" << endl;
+    archivo.close();
+    archivoMod.close();
+}
+
+void decode(vector<Node> v, string text){
+
 }
 
 void imprimirSimbolos(vector<Node> v){
