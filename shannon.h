@@ -6,13 +6,16 @@ using namespace std;
 
 struct Node {
     char simbolo;
-    double probabilidad;
-    int bitstream[]; 
+    double probabilidad = 0.0;
+    string bitstream = ""; 
 };
 
-vector<Node> obtenerProb(string texto){
-    vector<Node> v;
+void obtenerProb(vector<Node> &v, string texto);
+void encode(vector<Node> &v, int l, int r);
+void particion(vector<Node> v, int *l, int *r, double lprob, double rprob);
+void imprimirSimbolos(vector<Node> v);
 
+void obtenerProb(vector<Node> &v, string texto){
     ifstream archivo;
     archivo.open("archivos/" + texto, ios::in);
     char letra;
@@ -37,29 +40,32 @@ vector<Node> obtenerProb(string texto){
         s.probabilidad = (*fi).second / total;
         v.push_back(s);
     }
-
-    return v;
 }
 
-/* void encode(vector<Node> v, int l, int r) {
+void encode(vector<Node> &v, int l, int r) {
     if(l<r){
         int x, y;
         x = l;
         y = r;
         particion(v, &l, &r, v[l].probabilidad, v[r].probabilidad);
-        for(int i=0; i<=l; i++){
-            v[i].bitstream
+        for(int i=x; i<=l; i++){
+            v[i].bitstream += "1";
+            // cout << v[i].bitstream << endl;
         }
-        cout << "l: " << l << ", r: " << r << endl;
+        for(int i=r; i<=y; i++){
+            v[i].bitstream += "0";
+            // cout << v[i].bitstream << endl;
+        }
+        // cout << "l: " << l << ", r: " << r << endl;
         encode(v,x,l);
         encode(v,r,y);
     }
-} */
+}
 
 void particion(vector<Node> v, int *l, int *r, double lprob, double rprob){
-    cout << *l << " " << *r << endl;
+    /* cout << *l << " " << *r << endl;
     cout << "rprob: " << rprob << endl;
-    cout << "lprob: " << lprob << endl;
+    cout << "lprob: " << lprob << endl; */
     if(*l != *r-1){
         if(lprob > rprob){
             *r -= 1;
@@ -75,7 +81,7 @@ void particion(vector<Node> v, int *l, int *r, double lprob, double rprob){
 void imprimirSimbolos(vector<Node> v){
     double suma = 0.0;
     for (int i = 0; i < v.size(); i++){
-        cout << v[i].simbolo << " " << v[i].probabilidad << endl;
+        cout << v[i].simbolo << " " << v[i].probabilidad << " " << v[i].bitstream << endl;
         suma = suma + v[i].probabilidad;
     }
     cout << "suma: " << suma << endl; 
