@@ -12,13 +12,13 @@ struct Node{               // genera el tipo de dato node
     Node *left, *right;
 };
 
-struct comp{                               // objeto que sirve para ordenar la pila 
+struct comp{                               // objeto que sirve para ordenar la pila (encuentra la frecuencia mas baja )
     bool operator()(Node* l, Node* r){
         return l -> frequency > r -> frequency;
     }
 };
 
-Node*  getNode(char symbol, int frequency,  Node *left , Node *right){  //asigna un nodo al arbol 
+Node*  getNode(char symbol, int frequency,  Node *left , Node *right){  //asigna un nuevo  nodo al arbol 
     Node* nodo = new Node();
     nodo -> symbol = symbol;
     nodo -> frequency = frequency;
@@ -40,13 +40,13 @@ void encode(Node* root, string str, unordered_map<char,string> &CodeHuffman){
     encode(root-> right , str + '1', CodeHuffman);
 }
 
-void decode(Node* root, int &index, string str){    // edesceodifica los simbolos codificados 
+void decode(Node* root, int &index, string str){    // desceodifica los simbolos codificados 
     if (root == nullptr){
         return; 
     }
     if (!root -> left && !root -> right ){
 
-        cout<< root->symbol; 
+        //cout<< root->symbol; 
         return;
     } 
     index++;
@@ -57,33 +57,47 @@ void decode(Node* root, int &index, string str){    // edesceodifica los simbolo
 
 }
 
-void createArbol(string text ){
+void createArbol(string *text ){
 
-    unordered_map<char, int> frequency;
-    for(char symbol : text){
-        frequency[symbol]++; 
-    }
 
-    priority_queue<Node* ,vector<Node*>, comp> pq; 
     
-    for(auto pair : frequency ){ // agrega a la cola de prioridad los nodos de cada simbolo 
-
-        pq.push(getNode(pair.first, pair.second, nullptr,nullptr));
+    // cuenta cuantas veces aparece el simbolo en el texto 
+    // lo guarda en la esgtructura de datos map 
+    unordered_map<char, int> frequency;
+    for(char symbol : *text){
+        
+        frequency[symbol]++; 
         
     }
 
+    
+
+    //crea una cola de prioridad para guardar los nodos del arbol 
+    priority_queue<Node* ,vector<Node*>, comp> pq; 
+    
+    for(auto pair : frequency ){ // agrega a la cola de prioridad los nodos de cada simbolo 
+        
+        pq.push(getNode(pair.first, pair.second, nullptr,nullptr));
+                 // el tipo de caracter   // su freceuncia 
+    }
+    
+    // repite el proceso hasta que haya mas de un nodo en cola
+     
     while(pq.size() != 1){
         Node *left = pq.top(); pq.pop();
         Node *right = pq.top(); pq.pop();
         int sum = left -> frequency + right -> frequency;
         pq.push(getNode('\0', sum, left, right));
     }
-
+    
     Node* root = pq.top();
 
     /// imprime los codigos para cada simblo 
     unordered_map<char, string> CodeHuffman;
     encode(root, "", CodeHuffman); 
+
+    //-------------------------------------------------------------
+    
     cout << "\n Los codigos de Huffman: \n" <<"\n";
     for(auto pair: CodeHuffman){
         cout << pair.first <<  " " <<  pair.second << "\n";
@@ -91,19 +105,19 @@ void createArbol(string text ){
     
     //-------------------------------------------------------------------------------- 
 
-    cout << "\n El codigo original: \n " << text <<"\n"; 
+    //cout << "\n El codigo original: \n " << *text <<"\n"; 
     string str = ""; 
-    for(char symbol : text){
+    for(char symbol : *text){
         str += CodeHuffman[symbol];
     }
 
     //--------------------------------------------------------------------------------
 
 
-    cout << "\n El mensaje en binario es:  \n" << str << "\n";
+    //cout << "\n El mensaje en binario es:  \n" << str << "\n";
     
     int index = -1; 
-    cout << "\n El texto decodificado es: \n"; 
+    //cout << "\n El texto decodificado es: \n"; 
     while (index < (int)str.size() -2 ){
         decode(root, index ,str);              // toma el codigo binario y de descomprime 
 
@@ -111,7 +125,7 @@ void createArbol(string text ){
     cout << "\n";
 
     //str contiene el codigo binario  de la comprecion.    
-
+    
 
 
 
