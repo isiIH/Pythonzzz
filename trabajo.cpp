@@ -20,8 +20,9 @@ int main(int argc, char **argv){
     vector<Node> v;
     ifstream archivo;
     archivo.open("archivos/" + file, ios::in);
-    string linea;
+    string linea, textoCod;
     string texto = "";
+    double total = 0.0;
 
     if(archivo.fail()){
         cout << "Error" << endl;
@@ -37,6 +38,7 @@ int main(int argc, char **argv){
     obtenerProb(v, texto);
     clock_t end = clock();
     cout << "Tiempo de ejecución obtenerProb: " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
+    total += (double(end - start))/(CLOCKS_PER_SEC);
     sort(v.begin(), v.end(), [] (Node &x, Node &y) { return x.probabilidad > y.probabilidad; });
 
     int l = 0;
@@ -45,14 +47,24 @@ int main(int argc, char **argv){
     asignaCodigos(v, l, r);
     end = clock();
     cout << "Tiempo de ejecución asignaCodigos: " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
+    total += (double(end - start))/(CLOCKS_PER_SEC);
 
     imprimirSimbolos(v);
     start = clock();
-    encode(v, texto);
+    textoCod = encode(v, texto);
     end = clock();
     cout << "Tiempo de ejecución encode: " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
+    total += (double(end - start))/(CLOCKS_PER_SEC);
 
-    /* leerArchivo(texto); */
+    start = clock();
+    decode(v, textoCod);
+    end = clock();
+    cout << "Tiempo de ejecución decode: " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
+    total += (double(end - start))/(CLOCKS_PER_SEC);
+
+    cout << "Tiempo total: " << total << endl;
+
+    /* leerArchivo("decodificado.txt"); */
 	return EXIT_SUCCESS;
 }
 

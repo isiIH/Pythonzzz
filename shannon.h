@@ -7,21 +7,20 @@ using namespace std;
 
 struct Node {
     char simbolo;
-    double probabilidad = 0.0;
+    double probabilidad = 1.0;
     string bitstream = "";
 };
 
 void obtenerProb(vector<Node> &v, string texto);
 void asignaCodigos(vector<Node> &v, int l, int r);
 int particion(vector<Node> &v, int l, int r, double lprob, double rprob);
-void encode(vector<Node> &v, string text);
+string encode(vector<Node> &v, string text);
 void decode(vector<Node> &v, string text);
 void imprimirSimbolos(vector<Node> &v);
 int busquedaSecuencial(vector<Node> &v, int x);
 
 void obtenerProb(vector<Node> &v, string texto){
     double total = 0.0;
-/*     vector<Node> f(256); */
     int indice;
     Node s;
 
@@ -31,7 +30,6 @@ void obtenerProb(vector<Node> &v, string texto){
 
             if(indice == -1){
                 s.simbolo = c;
-                s.probabilidad = 1;
                 v.push_back(s);
             } else v[indice].probabilidad++;
 
@@ -39,24 +37,17 @@ void obtenerProb(vector<Node> &v, string texto){
         }
     }
 
+    /* for(char c : texto){
+        if(int(c) < 256 && int(c)>=0){
+            v[int(c)].simbolo = c;
+            v[int(c)].probabilidad++;
+            total++;
+        }
+    } */
+
     for(int i=0; i<v.size(); i++) {
         v[i].probabilidad /= total;
     }
-
-    /* for(char c : texto){
-        if(int(c) < 256 && int(c)>=0){
-            f[int(c)].simbolo = c;
-            f[int(c)].probabilidad++;
-            total++;
-        }
-    }
-
-    for(Node sim : f){
-        if(sim.probabilidad != 0){
-            sim.probabilidad /= total;
-            v.push_back(sim);
-        }
-    } */
 }
 
 
@@ -92,33 +83,48 @@ int particion(vector<Node> &v, int l, int r, double lprob, double rprob){
     return l;
 }
 
-void encode(vector<Node> &v, string text){
+string encode(vector<Node> &v, string text){
     ofstream archivoMod;
     archivoMod.open("archivos/codificado.txt");
     int indice;
+    string texto = "";
 
     for(char c : text){
-        indice = busquedaSecuencial(v,c);
-        archivoMod << v[indice].bitstream;
+        if(int(c) < 256 && int(c)>=0){
+            indice = busquedaSecuencial(v,c);
+            archivoMod << v[indice].bitstream;
+            texto += v[indice].bitstream;
+        }
     }
+
     archivoMod.close();
     cout << "Se ha creado el archivo codificado" << endl;
+    return texto;
 }
 
 void decode(vector<Node> &v, string texto){
     ofstream archivoMod;
-    archivoMod.open("archivos/codificado.txt", ios::in);
-    char letra;
-    string codigo = "";
+    archivoMod.open("archivos/decodificado.txt");
+    int l = 0;
+    int i, r;
 
-    map<char, string> CodeShannon;
-    for(int i=0; i<v.size(); i++){
-        CodeShannon[v[i].simbolo] = v[i].bitstream;
-    }
+    while(l+v[0].bitstream.length() <= texto.length()) {
+        i = 0;
+        r = v[i].bitstream.length();
+        /* cout << "l: " << l << " r: " << r << " " << texto.substr(l,r) << endl;  000010100*/
+        while(texto.substr(l,r) != v[i].bitstream && i < v.size()-1) {
+            /* cout << v[i].bitstream << endl; */
+            i += 1;
+            /* cout << i << endl; */
+            if(v[i].bitstream.length() > v[i-1].bitstream.length()) {
+                r++;
+            } else if(v[i].bitstream.length() < v[i-1].bitstream.length()) {
+                r--;
+            }
+        }
 
-    for(char c : texto){
-        /*INSERTE CODIGO xd*/
-        archivoMod << "xd";
+        archivoMod << v[i].simbolo;
+        l += r;
     }
     archivoMod.close();
 }
