@@ -5,31 +5,32 @@
 #include <algorithm>
 using namespace std;
 
-struct Node {
-    char simbolo;
+struct Simbolo {
+    char letra;
     double probabilidad = 1.0;
     string bitstream = "";
 };
 
-void obtenerProb(vector<Node> &v, string texto);
-void asignaCodigos(vector<Node> &v, int l, int r);
-int particion(vector<Node> &v, int l, int r, double lprob, double rprob);
-string encode(vector<Node> &v, string text);
-void decode(vector<Node> &v, string text);
-void imprimirSimbolos(vector<Node> &v);
-int busquedaSecuencial(vector<Node> &v, int x);
+void obtenerProb(vector<Simbolo> &v, string texto);
+void asignaCodigos(vector<Simbolo> &v, int l, int r);
+int particion(vector<Simbolo> &v, int l, int r, double lprob, double rprob);
+string encode(vector<Simbolo> &v, string text);
+void decode(vector<Simbolo> &v, string texto);
+void decode2(vector<Simbolo> &v, string texto, int k);
+void imprimirSimbolos(vector<Simbolo> &v);
+int busquedaSecuencial(vector<Simbolo> &v, int x);
 
-void obtenerProb(vector<Node> &v, string texto){
+void obtenerProb(vector<Simbolo> &v, string texto){
     double total = 0.0;
     int indice;
-    Node s;
+    Simbolo s;
 
     for(char c : texto){
         if(int(c) < 256 && int(c)>=0){            
             indice = busquedaSecuencial(v,c);
 
             if(indice == -1){
-                s.simbolo = c;
+                s.letra = c;
                 v.push_back(s);
             } else v[indice].probabilidad++;
 
@@ -51,7 +52,7 @@ void obtenerProb(vector<Node> &v, string texto){
 }
 
 
-void asignaCodigos(vector<Node> &v, int l, int r) {
+void asignaCodigos(vector<Simbolo> &v, int l, int r) {
     if(l<r){
         int p = particion(v, l, r, v[l].probabilidad, v[r].probabilidad);
         for(int i=l; i<=r; i++){
@@ -66,7 +67,7 @@ void asignaCodigos(vector<Node> &v, int l, int r) {
     }
 }
 
-int particion(vector<Node> &v, int l, int r, double lprob, double rprob){
+int particion(vector<Simbolo> &v, int l, int r, double lprob, double rprob){
 /*     cout << l << " " << r << endl;
     cout << "lprob: " << lprob << endl;
     cout << "rprob: " << rprob << endl; */
@@ -83,7 +84,7 @@ int particion(vector<Node> &v, int l, int r, double lprob, double rprob){
     return l;
 }
 
-string encode(vector<Node> &v, string text){
+string encode(vector<Simbolo> &v, string text){
     ofstream archivoMod;
     archivoMod.open("archivos/codificado.txt");
     int indice;
@@ -102,7 +103,7 @@ string encode(vector<Node> &v, string text){
     return texto;
 }
 
-void decode(vector<Node> &v, string texto){
+void decode(vector<Simbolo> &v, string texto){
     ofstream archivoMod;
     archivoMod.open("archivos/decodificado.txt");
     int l = 0;
@@ -123,25 +124,57 @@ void decode(vector<Node> &v, string texto){
             }
         }
 
-        archivoMod << v[i].simbolo;
+        archivoMod << v[i].letra;
         l += r;
     }
     archivoMod.close();
 }
 
-void imprimirSimbolos(vector<Node> &v){
+void decode2(vector<Simbolo> &v, string texto, int k) {
+    if(k<0 || k>v.size()) return;
+
+    ofstream archivoMod;
+    archivoMod.open("archivos/decodificado.txt");
+    int l = 0;
+    int i, r;
+    string textoDecod = "";
+
+    while(textoDecod.length()!=k && l+v[0].bitstream.length() <= texto.length()) {
+        i = 0;
+        r = v[i].bitstream.length();
+        /* cout << "l: " << l << " r: " << r << " " << texto.substr(l,r) << endl;  000010100*/
+        while(texto.substr(l,r) != v[i].bitstream && i < v.size()-1) {
+            /* cout << v[i].bitstream << endl; */
+            i += 1;
+            /* cout << i << endl; */
+            if(v[i].bitstream.length() > v[i-1].bitstream.length()) {
+                r++;
+            } else if(v[i].bitstream.length() < v[i-1].bitstream.length()) {
+                r--;
+            }
+        }
+
+        archivoMod << v[i].letra;
+        textoDecod += v[i].letra;
+        l += r;
+    }
+    cout << textoDecod << endl;
+    archivoMod.close();
+}
+
+void imprimirSimbolos(vector<Simbolo> &v){
     double suma = 0.0;
     for (int i = 0; i < v.size(); i++){
-        cout << "'" << v[i].simbolo << "'\t" << v[i].probabilidad << "\t" << v[i].bitstream << endl;
+        cout << "'" << v[i].letra << "'\t" << v[i].probabilidad << "\t" << v[i].bitstream << endl;
         suma = suma + v[i].probabilidad;
     }
     cout << "suma: " << suma << endl; 
 }
 
-int busquedaSecuencial(vector<Node> &v, int x){
+int busquedaSecuencial(vector<Simbolo> &v, int x){
 	int i;
 	for(i=0; i<v.size(); i++){
-		if(x == v[i].simbolo)
+		if(x == v[i].letra)
 			return i;
 	}
 	return -1;

@@ -17,7 +17,7 @@ int main(int argc, char **argv){
 	}
 
     string file = argv[1];
-    vector<Node> v;
+    vector<Simbolo> v;
     ifstream archivo;
     archivo.open("archivos/" + file, ios::in);
     string linea, textoCod;
@@ -39,7 +39,7 @@ int main(int argc, char **argv){
     clock_t end = clock();
     cout << "Tiempo de ejecución obtenerProb: " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
     total += (double(end - start))/(CLOCKS_PER_SEC);
-    sort(v.begin(), v.end(), [] (Node &x, Node &y) { return x.probabilidad > y.probabilidad; });
+    sort(v.begin(), v.end(), [] (Simbolo &x, Simbolo &y) { return x.probabilidad > y.probabilidad; });
 
     int l = 0;
     int r = v.size() - 1;
@@ -58,6 +58,7 @@ int main(int argc, char **argv){
 
     start = clock();
     decode(v, textoCod);
+    /* decode2(v, textoCod, 2); */
     end = clock();
     cout << "Tiempo de ejecución decode: " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
     total += (double(end - start))/(CLOCKS_PER_SEC);
