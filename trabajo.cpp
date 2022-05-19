@@ -73,6 +73,9 @@ int main(int argc, char **argv){
 
     /* imprimirPosiciones(P); */
     /* leerArchivo("decodificado.txt"); */
+
+    /* cout << "\n" << "Sizeof F: " << sizeof(F) << " bytes" << endl;
+    cout << "Sizeof P: " << sizeof(P) << " bytes" << endl; */
 	return EXIT_SUCCESS;
 }
 

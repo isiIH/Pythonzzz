@@ -101,7 +101,7 @@ string encode(vector<Simbolo> &F, string text){
     }
 
     archivoMod.close();
-    cout << "Se ha creado el archivo codificado" << endl;
+    cout << "Se ha creado el archivo codificado.txt" << endl;
     return texto;
 }
 
@@ -138,15 +138,15 @@ void decode(vector<Simbolo> &F, string texto){
     while(l+F[0].bitstream.length() <= texto.length()) {
         i = 0;
         r = F[i].bitstream.length();
-        /* cout << "l: " << l << " r: " << r << " " << texto.substr(l,r) << endl;  000010100*/
+        /* cout << "l: " << l << " r: " << r << " " << texto.substr(l,r) << endl; */
         while(texto.substr(l,r) != F[i].bitstream) {
             /* cout << F[i].bitstream << endl; */
             i += 1;
             /* cout << i << endl; */
             if(F[i].bitstream.length() > F[i-1].bitstream.length()) {
-                r++;
+                r += F[i].bitstream.length() - F[i-1].bitstream.length();
             } else if(F[i].bitstream.length() < F[i-1].bitstream.length()) {
-                r--;
+                r -= F[i-1].bitstream.length() - F[i].bitstream.length();
             }
         }
 
@@ -178,9 +178,9 @@ void decode2(vector<Simbolo> &F, string texto, int k, int u) {
             i += 1;
             /* cout << i << endl; */
             if(F[i].bitstream.length() > F[i-1].bitstream.length()) {
-                r++;
+                r += F[i].bitstream.length() - F[i-1].bitstream.length();
             } else if(F[i].bitstream.length() < F[i-1].bitstream.length()) {
-                r--;
+                r -= F[i-1].bitstream.length() - F[i].bitstream.length();
             }
         }
 
@@ -216,9 +216,9 @@ void decode3(vector<Simbolo> &F, vector<PosCodificado> &P, int i, int j, string 
             x += 1;
             /* cout << x << endl; */
             if(F[x].bitstream.length() > F[x-1].bitstream.length()) {
-                r++;
+                r += F[x].bitstream.length() - F[x-1].bitstream.length();
             } else if(F[x].bitstream.length() < F[x-1].bitstream.length()) {
-                r--;
+                r -= F[x-1].bitstream.length() - F[x].bitstream.length();
             }
         }
 
