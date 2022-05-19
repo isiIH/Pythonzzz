@@ -21,17 +21,19 @@ int main(int argc, char **argv){
     vector<PosCodificado> P;
     ifstream archivo;
     archivo.open("archivos/" + file, ios::in);
-    string linea, textoCod;
+    string textoCod;
     string texto = "";
     double total = 0.0;
+    char letra;
 
     if(archivo.fail()){
         cout << "Error" << endl;
         exit(1);
     }
-    while(!archivo.eof()){
-        getline(archivo, linea);
-        texto += linea;
+    while(archivo >> noskipws >> letra) {
+        if(int(letra) < 256 && int(letra)>=0){
+            texto += letra;
+        }
     }
     archivo.close();
 
@@ -61,13 +63,13 @@ int main(int argc, char **argv){
 
     start = clock();
     decode(F, textoCod);
-    /* decode2(F, textoCod, 2); */
+    /* decode2(F, textoCod, 7, texto.size()-1); */
     /* decode3(F, P, 1, 20, textoCod); */
     end = clock();
     cout << "Tiempo de ejecución decode: " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
     total += (double(end - start))/(CLOCKS_PER_SEC);
 
-    cout << "Tiempo total: " << total << endl;
+    cout << "Tiempo total: " << total << "s" << endl;
 
     /* imprimirPosiciones(P); */
     /* leerArchivo("decodificado.txt"); */

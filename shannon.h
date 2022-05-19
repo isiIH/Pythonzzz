@@ -18,15 +18,20 @@ struct PosCodificado {
 };
 
 void obtenerProb(vector<Simbolo> &F, string texto);
+
 void asignaCodigos(vector<Simbolo> &F, int l, int r);
 int particion(vector<Simbolo> &F, int l, int r, double lprob, double rprob);
+
 string encode(vector<Simbolo> &F, string text);
 string encode2(vector<Simbolo> &F, vector<PosCodificado> &P, string text);
+
 void decode(vector<Simbolo> &F, string texto);
-void decode2(vector<Simbolo> &F, string texto, int k);
+void decode2(vector<Simbolo> &F, string texto, int k, int u);
 void decode3(vector<Simbolo> &F, vector<PosCodificado> &P, int i, int j, string texto);
+
 void imprimirSimbolos(vector<Simbolo> &F);
 void imprimirPosiciones(vector<PosCodificado> &P);
+
 int busquedaSecuencial(vector<Simbolo> &F, int x);
 
 void obtenerProb(vector<Simbolo> &F, string texto){
@@ -34,26 +39,16 @@ void obtenerProb(vector<Simbolo> &F, string texto){
     int indice;
     Simbolo s;
 
-    for(char c : texto){
-        if(int(c) < 256 && int(c)>=0){            
-            indice = busquedaSecuencial(F,c);
+    for(char c : texto){          
+        indice = busquedaSecuencial(F,c);
 
-            if(indice == -1){
-                s.letra = c;
-                F.push_back(s);
-            } else F[indice].probabilidad++;
+        if(indice == -1){
+            s.letra = c;
+            F.push_back(s);
+        } else F[indice].probabilidad++;
 
-            total++;
-        }
+        total++;
     }
-
-    /* for(char c : texto){
-        if(int(c) < 256 && int(c)>=0){
-            F[int(c)].simbolo = c;
-            F[int(c)].probabilidad++;
-            total++;
-        }
-    } */
 
     for(int i=0; i<F.size(); i++) {
         F[i].probabilidad /= total;
@@ -100,12 +95,9 @@ string encode(vector<Simbolo> &F, string text){
     string texto = "";
 
     for(char c : text){
-        if(int(c) < 256 && int(c)>=0){
-            indice = busquedaSecuencial(F,c);
-            archivoMod << F[indice].bitstream;
-            texto += F[indice].bitstream;
-
-        }   
+        indice = busquedaSecuencial(F,c);
+        archivoMod << F[indice].bitstream;
+        texto += F[indice].bitstream;
     }
 
     archivoMod.close();
@@ -121,21 +113,19 @@ string encode2(vector<Simbolo> &F, vector<PosCodificado> &P, string text){
     PosCodificado p;
 
     for(char c : text){
-        if(int(c) < 256 && int(c)>=0){
-            p.simbolo = c;
-            p.posInicial = texto.length();
+        p.simbolo = c;
+        p.posInicial = texto.length();
 
-            indice = busquedaSecuencial(F,c);
-            archivoMod << F[indice].bitstream;
-            texto += F[indice].bitstream;
+        indice = busquedaSecuencial(F,c);
+        archivoMod << F[indice].bitstream;
+        texto += F[indice].bitstream;
 
-            p.posFinal = texto.length()-1;
-            P.push_back(p);
-        }   
+        p.posFinal = texto.length()-1;
+        P.push_back(p);
     }
 
     archivoMod.close();
-    cout << "Se ha creado el archivo codificado" << endl;
+    cout << "Se ha creado el archivo codificado.txt" << endl;
     return texto;
 }
 
@@ -149,7 +139,7 @@ void decode(vector<Simbolo> &F, string texto){
         i = 0;
         r = F[i].bitstream.length();
         /* cout << "l: " << l << " r: " << r << " " << texto.substr(l,r) << endl;  000010100*/
-        while(texto.substr(l,r) != F[i].bitstream && i < F.size()-1) {
+        while(texto.substr(l,r) != F[i].bitstream) {
             /* cout << F[i].bitstream << endl; */
             i += 1;
             /* cout << i << endl; */
@@ -164,10 +154,14 @@ void decode(vector<Simbolo> &F, string texto){
         l += r;
     }
     archivoMod.close();
+    cout << "Se ha creado el archivo decodificado.txt" << endl;
 }
 
-void decode2(vector<Simbolo> &F, string texto, int k) {
-    if(k<0 || k>F.size()) return;
+void decode2(vector<Simbolo> &F, string texto, int k, int u) {
+    if(k<0 || k>u) {
+        cout << "Posición k fuera de rango..." << endl;
+        return;
+    }
 
     ofstream archivoMod;
     archivoMod.open("archivos/decodificado.txt");
@@ -175,11 +169,11 @@ void decode2(vector<Simbolo> &F, string texto, int k) {
     int i, r;
     string textoDecod = "";
 
-    while(textoDecod.length()!=k && l+F[0].bitstream.length() <= texto.length()) {
+    while(textoDecod.length()-1 !=k) {
         i = 0;
         r = F[i].bitstream.length();
         /* cout << "l: " << l << " r: " << r << " " << texto.substr(l,r) << endl;  000010100*/
-        while(texto.substr(l,r) != F[i].bitstream && i < F.size()-1) {
+        while(texto.substr(l,r) != F[i].bitstream) {
             /* cout << v[i].bitstream << endl; */
             i += 1;
             /* cout << i << endl; */
@@ -194,19 +188,19 @@ void decode2(vector<Simbolo> &F, string texto, int k) {
         textoDecod += F[i].letra;
         l += r;
     }
-    cout << textoDecod << endl;
+    /* cout << textoDecod << endl; */
     archivoMod.close();
+    cout << "Se ha creado el archivo decodificado.txt" << endl;
 }
 
 void decode3(vector<Simbolo> &F, vector<PosCodificado> &P, int i, int j, string texto){
-    ofstream archivoMod;
-    archivoMod.open("archivos/decodificado.txt");
-
     if(i<1 || i>j || j>P.size()-1) {
         cout << "Posiciones i, j fuera de límite..." << endl;
         return;
     }
 
+    ofstream archivoMod;
+    archivoMod.open("archivos/decodificado.txt");
     texto = texto.substr(P[i].posInicial, P[j].posFinal - P[i].posInicial + 1);
     /* cout << texto << endl; */
 
@@ -217,7 +211,7 @@ void decode3(vector<Simbolo> &F, vector<PosCodificado> &P, int i, int j, string 
         x = 0;
         r = F[0].bitstream.length();
         /* cout << "l: " << l << " r: " << r << " " << texto.substr(l,r) << endl; */
-        while(texto.substr(l,r) != F[x].bitstream && x < F.size()-1) {
+        while(texto.substr(l,r) != F[x].bitstream) {
             /* cout << F[x].letra << " " << F[x].bitstream << endl; */
             x += 1;
             /* cout << x << endl; */
@@ -234,6 +228,7 @@ void decode3(vector<Simbolo> &F, vector<PosCodificado> &P, int i, int j, string 
     }
     /* cout << endl; */
     archivoMod.close();
+    cout << "Se ha creado el archivo decodificado.txt" << endl;
 }
 
 void imprimirSimbolos(vector<Simbolo> &F){
