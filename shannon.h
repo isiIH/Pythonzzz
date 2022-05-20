@@ -143,11 +143,7 @@ void decode(vector<Simbolo> &F, string texto){
             /* cout << F[i].bitstream << endl; */
             i += 1;
             /* cout << i << endl; */
-            if(F[i].bitstream.length() > F[i-1].bitstream.length()) {
-                r += F[i].bitstream.length() - F[i-1].bitstream.length();
-            } else if(F[i].bitstream.length() < F[i-1].bitstream.length()) {
-                r -= F[i-1].bitstream.length() - F[i].bitstream.length();
-            }
+            r = F[i].bitstream.length();
         }
 
         archivoMod << F[i].letra;
@@ -158,7 +154,7 @@ void decode(vector<Simbolo> &F, string texto){
 }
 
 void decode2(vector<Simbolo> &F, string texto, int k, int u) {
-    if(k<0 || k>u) {
+    if(k<0 || k>(u-1)) {
         cout << "Posición k fuera de rango..." << endl;
         return;
     }
@@ -177,11 +173,7 @@ void decode2(vector<Simbolo> &F, string texto, int k, int u) {
             /* cout << v[i].bitstream << endl; */
             i += 1;
             /* cout << i << endl; */
-            if(F[i].bitstream.length() > F[i-1].bitstream.length()) {
-                r += F[i].bitstream.length() - F[i-1].bitstream.length();
-            } else if(F[i].bitstream.length() < F[i-1].bitstream.length()) {
-                r -= F[i-1].bitstream.length() - F[i].bitstream.length();
-            }
+            r = F[i].bitstream.length();
         }
 
         archivoMod << F[i].letra;
@@ -215,11 +207,7 @@ void decode3(vector<Simbolo> &F, vector<PosCodificado> &P, int i, int j, string 
             /* cout << F[x].letra << " " << F[x].bitstream << endl; */
             x += 1;
             /* cout << x << endl; */
-            if(F[x].bitstream.length() > F[x-1].bitstream.length()) {
-                r += F[x].bitstream.length() - F[x-1].bitstream.length();
-            } else if(F[x].bitstream.length() < F[x-1].bitstream.length()) {
-                r -= F[x-1].bitstream.length() - F[x].bitstream.length();
-            }
+            r = F[i].bitstream.length();
         }
 
         archivoMod << F[x].letra;

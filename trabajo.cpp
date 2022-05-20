@@ -63,7 +63,7 @@ int main(int argc, char **argv){
 
     start = clock();
     decode(F, textoCod);
-    /* decode2(F, textoCod, 7, texto.size()-1); */
+    /* decode2(F, textoCod, 7, texto.size()); */
     /* decode3(F, P, 1, 20, textoCod); */
     end = clock();
     cout << "Tiempo de ejecución decode: " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
