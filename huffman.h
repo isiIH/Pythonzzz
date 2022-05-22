@@ -2,7 +2,7 @@
 #include <string> 
 #include <queue> 
 #include <unordered_map> 
-
+#include <vector>
 
 using namespace std;
 
@@ -12,7 +12,7 @@ struct Node{               // genera el tipo de dato node
     Node *left, *right;
 };
 
-struct comp{                               // objeto que sirve para ordenar la pila (encuentra la frecuencia mas baja )
+struct comp{                               // objeto que sirve para ordenar la cola (encuentra la frecuencia mas baja )
     bool operator()(Node* l, Node* r){
         return l -> frequency > r -> frequency;
     }
@@ -40,93 +40,164 @@ void encode(Node* root, string str, unordered_map<char,string> &CodeHuffman){
     encode(root-> right , str + '1', CodeHuffman);
 }
 
-void decode(Node* root, int &index, string str){    // desceodifica los simbolos codificados 
-    if (root == nullptr){
-        return; 
-    }
-    if (!root -> left && !root -> right ){
+void decode(Node* root,  string Binario, string &textodeco ){    // desceodifica los simbolos codificados 
+    
+    int index=0;
 
-        //cout<< root->symbol; 
-        return;
-    } 
-    index++;
-    if(str[index] == '0')
-        decode(root-> left, index, str);
-    else 
-        decode(root-> right, index,str);
+    Node* head=root;
+
+
+    while(index<Binario.length())
+    {  
+
+         if(Binario[index]=='0')
+         {
+             head=head->left;
+         }
+
+         else{
+             head=head->right;
+         }
+
+
+         if(head->left==nullptr && head->right==nullptr)
+         {
+             textodeco.push_back(head->symbol);
+             head=root;
+         }
+
+         index++;
+    }
 
 }
 
-void createArbol(string *text ){
 
 
-    
-    // cuenta cuantas veces aparece el simbolo en el texto 
-    // lo guarda en la esgtructura de datos map 
-    unordered_map<char, int> frequency;
-    for(char symbol : *text){
-        
-        frequency[symbol]++; 
+
+int busquedaSecuencial(vector<Node> &F, int x){
+	int i;
+	for(i=0; i<F.size(); i++){
+		if(x == F[i].symbol)
+			return i;
+	}
+	return -1;
+}
+
+
+void imprimirSimbolos(vector<Node> &F){
+    for (int i = 0; i < F.size(); i++){
+        cout << "'" << F[i].symbol << "'\t" << F[i].frequency << "\t" << endl;
         
     }
-
     
+}
 
-    //crea una cola de prioridad para guardar los nodos del arbol 
-    priority_queue<Node* ,vector<Node*>, comp> pq; 
-    
-    for(auto pair : frequency ){ // agrega a la cola de prioridad los nodos de cada simbolo 
+void imprimirCodeHuffman(unordered_map<char,string> &CodeHuffman){
+    cout << "\n Los codigos de Huffman: \n" <<"\n";
+    for(auto pair: CodeHuffman){
+        cout << pair.first <<  " " <<  pair.second << "\n";
+    }
+
+}
+
+void codigoBinario(unordered_map<char,string> &CodeHuffman, string text, string *binario  ){
+    //cout<< text<<endl;
+    for(char symbol : text){
+        *binario += CodeHuffman[symbol];
+    }
+    cout << "\n El mensaje en binario es:  \n" << *binario << "\n";
+
+}
+
+
+void CuentaFrecuencia(vector<Node> &F, string text , Node &s){
+    int indice;
+    for(char c : text){
+        indice = busquedaSecuencial(F,c);
+        if(indice == -1){
+            s.symbol = c;
+            F.push_back(s);
+        } else F[indice].frequency++;
+
         
-        pq.push(getNode(pair.first, pair.second, nullptr,nullptr));
+    }
+    
+}
+
+
+
+Node* GeneradorArbol(vector<Node> &F, priority_queue<Node* ,vector<Node*>, comp> &pq ){
+
+    // Node s; 
+    // string binario; 
+    // //crea una cola de prioridad para guardar los nodos del arbol 
+    // priority_queue<Node* ,vector<Node*>, comp> pq; 
+    // unordered_map<char, string> CodeHuffman;
+    // string textodeco = "";
+    
+
+    //cuenta cuantas veces aparece el simbolo en el texto 
+    //CuentaFrecuencia(F,*text,s);
+    
+    for(auto i : F ){ // agrega a la cola de prioridad los nodos de cada simbolo 
+        
+        pq.push(getNode(i.symbol, i.frequency, nullptr,nullptr));
                  // el tipo de caracter   // su freceuncia 
     }
     
     // repite el proceso hasta que haya mas de un nodo en cola
      
-    while(pq.size() != 1){
+    while(pq.size() > 1){
         Node *left = pq.top(); pq.pop();
         Node *right = pq.top(); pq.pop();
         int sum = left -> frequency + right -> frequency;
         pq.push(getNode('\0', sum, left, right));
     }
+
+    //crea la raiz para el arbol 
+     Node* root = pq.top();
+
+    return root; 
+
+
+
+    // encode(root, "", CodeHuffman); 
+
+    // imprimirCodeHuffman(CodeHuffman);
+
+    // codigoBinario(CodeHuffman, *text, &binario);
     
-    Node* root = pq.top();
-
-    /// imprime los codigos para cada simblo 
-    unordered_map<char, string> CodeHuffman;
-    encode(root, "", CodeHuffman); 
-
-    //-------------------------------------------------------------
     
-    cout << "\n Los codigos de Huffman: \n" <<"\n";
-    for(auto pair: CodeHuffman){
-        cout << pair.first <<  " " <<  pair.second << "\n";
-    }
+    // cout << "empieza decode "<< endl;
+    // decode(root, binario, textodeco); 
+
+    // for(int j = 0; j<textodeco.size(); j++){
+
+    //     cout << textodeco[j];
+
+    // }
     
-    //-------------------------------------------------------------------------------- 
-
-    //cout << "\n El codigo original: \n " << *text <<"\n"; 
-    string str = ""; 
-    for(char symbol : *text){
-        str += CodeHuffman[symbol];
-    }
-
-    //--------------------------------------------------------------------------------
-
-
-    //cout << "\n El mensaje en binario es:  \n" << str << "\n";
+   
     
-    int index = -1; 
-    //cout << "\n El texto decodificado es: \n"; 
-    while (index < (int)str.size() -2 ){
-        decode(root, index ,str);              // toma el codigo binario y de descomprime 
+    
+   
 
-    } 
-    cout << "\n";
 
-    //str contiene el codigo binario  de la comprecion.    
+    
+    
+    
+    
+     
+                    
+
+    
+  
+
+        
     
 
 
 
 }
+
+
