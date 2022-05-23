@@ -105,7 +105,7 @@ void codigoBinario(unordered_map<char,string> &CodeHuffman, string text, string 
     for(char symbol : text){
         *binario += CodeHuffman[symbol];
     }
-    cout << "\n El mensaje en binario es:  \n" << *binario << "\n";
+    //cout << "\n El mensaje en binario es:  \n" << *binario << "\n";
 
 }
 
@@ -128,16 +128,7 @@ void CuentaFrecuencia(vector<Node> &F, string text , Node &s){
 
 Node* GeneradorArbol(vector<Node> &F, priority_queue<Node* ,vector<Node*>, comp> &pq ){
 
-    // Node s; 
-    // string binario; 
-    // //crea una cola de prioridad para guardar los nodos del arbol 
-    // priority_queue<Node* ,vector<Node*>, comp> pq; 
-    // unordered_map<char, string> CodeHuffman;
-    // string textodeco = "";
     
-
-    //cuenta cuantas veces aparece el simbolo en el texto 
-    //CuentaFrecuencia(F,*text,s);
     
     for(auto i : F ){ // agrega a la cola de prioridad los nodos de cada simbolo 
         
@@ -159,23 +150,6 @@ Node* GeneradorArbol(vector<Node> &F, priority_queue<Node* ,vector<Node*>, comp>
 
     return root; 
 
-
-
-    // encode(root, "", CodeHuffman); 
-
-    // imprimirCodeHuffman(CodeHuffman);
-
-    // codigoBinario(CodeHuffman, *text, &binario);
-    
-    
-    // cout << "empieza decode "<< endl;
-    // decode(root, binario, textodeco); 
-
-    // for(int j = 0; j<textodeco.size(); j++){
-
-    //     cout << textodeco[j];
-
-    // }
     
    
     
