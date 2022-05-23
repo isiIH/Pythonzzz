@@ -45,27 +45,19 @@ void decode(Node* root,  string Binario, string &textodeco ){    // desceodifica
     int index=0;
 
     Node* head=root;
+    while(index<Binario.length()){  
 
-
-    while(index<Binario.length())
-    {  
-
-         if(Binario[index]=='0')
-         {
+         if(Binario[index]=='0'){
              head=head->left;
          }
 
          else{
              head=head->right;
          }
-
-
-         if(head->left==nullptr && head->right==nullptr)
-         {
+         if(head->left==nullptr && head->right==nullptr){
              textodeco.push_back(head->symbol);
              head=root;
          }
-
          index++;
     }
 
@@ -123,7 +115,6 @@ void CuentaFrecuencia(vector<Node> &F, string text , Node &s){
     }
     
 }
-
 
 
 Node* GeneradorArbol(vector<Node> &F, priority_queue<Node* ,vector<Node*>, comp> &pq ){

@@ -70,7 +70,6 @@ int main(int argc, char **argv){
     totalT += (double(end - start))/(CLOCKS_PER_SEC);
     //imprimirCodeHuffman(CodeHuffman);
 
-
     start = clock();
     codigoBinario(CodeHuffman, texto, &binario);
     end = clock();
@@ -91,10 +90,6 @@ int main(int argc, char **argv){
     }
 
     cout << " tiempo total: " << totalT <<"s" << endl; 
-
-   
-    
-
 
     
 	return EXIT_SUCCESS;
