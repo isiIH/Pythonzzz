@@ -21,8 +21,7 @@ int main(int argc, char **argv){
     vector<PosCodificado> P;
     ifstream archivo;
     archivo.open("archivos/" + file, ios::in);
-    string textoCod;
-    string texto = "";
+    string texto = "", textoCod, textoDecod;
     double total = 0.0;
     char letra;
 
@@ -62,9 +61,9 @@ int main(int argc, char **argv){
     total += (double(end - start))/(CLOCKS_PER_SEC);
 
     start = clock();
-    decode(F, textoCod);
-    /* decode2(F, textoCod, 7, texto.size()); */
-    /* decode3(F, P, 1, 20, textoCod); */
+    textoDecod = decode(F, textoCod);
+    /* textoDecod = decode2(F, textoCod, 7, texto.size());
+    textoDecod = decode3(F, P, 1, 20, textoCod); */
     end = clock();
     cout << "Tiempo de ejecución decode: " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
     total += (double(end - start))/(CLOCKS_PER_SEC);
@@ -74,8 +73,16 @@ int main(int argc, char **argv){
     /* imprimirPosiciones(P); */
     /* leerArchivo("decodificado.txt"); */
 
-    /* cout << "\n" << "Sizeof F: " << sizeof(F) << " bytes" << endl;
-    cout << "Sizeof P: " << sizeof(P) << " bytes" << endl; */
+    cout << "\n" << "Tamaño Simbolo: " << sizeof(struct Simbolo) << " bytes" << endl;
+    cout << "Tamaño PosCodificado: " << sizeof(struct PosCodificado) << " bytes" << endl;
+    cout << "Tamaño F: " << (F.size() * double(sizeof(struct Simbolo)))/1048576 << " MB" << endl;
+    cout << "Tamaño P: " << (P.size() * double(sizeof(struct PosCodificado)))/1048576 << " MB" << endl;
+    cout << "Tamaño texto original: " << (double(texto.length()))/1048576 << " MB" << endl;
+    cout << "Tamaño texto codificado: " << ( (double(textoCod.length()))/1048576 )/8 << " MB" << endl;
+    cout << "Tamaño texto decodificado: " << (double(textoDecod.length()))/1048576 << " MB" << endl;
+    /* cout << texto << endl;
+    cout << textoCod << endl;
+    cout << textoDecod << endl; */
 	return EXIT_SUCCESS;
 }
 
