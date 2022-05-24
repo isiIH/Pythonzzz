@@ -9,7 +9,6 @@
 #include "shannon.h" 
 using namespace std;
 
-void readFile(string *text);
 void ejecutarShannon(string texto);
 void ejecutarHuffman(string texto);
 
@@ -46,47 +45,6 @@ int main(int argc, char **argv){
 }
 
 //----------------------------------------------------------------------------------------------
-
-void readFile(string *text){
-
-
-    ifstream archivo;
-    string texto;
-    archivo.open("archivos/english.100MB",ios::in);
-
-    if(archivo.fail()){
-
-        cout << "Error" << endl;
-        exit(1);
-    }
-    while(!archivo.eof()){
-
-        getline(archivo,*text);
-
-    }
-    archivo.close();
-
-
-
-    // string texto = "";
-    // ifstream archivo;
-
-    // archivo.open("archivos/prueba.txt",ios::in);
-
-    // if (archivo.is_open()) {
-    //     while (getline(archivo, texto)) {
-    //         //cout << texto << endl;
-    //         *text =  *text + texto;
-    //     }
-    //     archivo.close();
-    // } else {
-    //     cout << "No se pudo abrir el archivo";
-    // }
-    
-    //cout << *text << endl; 
-
-    
-}
 
 void ejecutarShannon(string texto) {
     vector<Simbolo> F;
