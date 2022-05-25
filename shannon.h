@@ -211,7 +211,7 @@ string decode3(vector<Simbolo> &F, vector<PosCodificado> &P, int i, int j, strin
         x = 0;
         r = F[x].bitstream.length();
         /* cout << "l: " << l << " r: " << r << " " << texto.substr(l,r) << endl; */
-        while(x < F.size() && texto.substr(l,r) != F[x].bitstream) {
+        while(texto.substr(l,r) != F[x].bitstream) {
             /* cout << F[x].letra << " " << F[x].bitstream << endl; */
             x += 1;
             /* cout << x << endl; */
