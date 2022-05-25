@@ -16,12 +16,13 @@ void ejecutarHuffman(string texto);
 
 int main(int argc, char **argv){
     
-    if(argc != 2){
-		cout << "Error. Debe ejecutarse como ./trabajo archivo" << endl;
+    if(argc != 3){
+		cout << "Error. Debe ejecutarse como ./trabajo archivo  1 (Shannon) o 0 (Huffman)  " << endl;
 		exit(EXIT_FAILURE);
 	}
 
     string file = argv[1];
+    int condicion = atoi( argv[2]); // si es 1 ejecuta Shannon, si es 0 ejecuta Huffman
     ifstream archivo;
     archivo.open("archivos/" + file, ios::in);
     string texto = "";
@@ -38,8 +39,12 @@ int main(int argc, char **argv){
     }
     archivo.close();
 
-    ejecutarShannon(texto);
-    /* ejecutarHuffman(texto); */
+
+    if(condicion == 1)
+        ejecutarShannon(texto);
+    else 
+        if (condicion == 0 )
+            ejecutarHuffman(texto); 
 
 	return EXIT_SUCCESS;
 }
@@ -57,7 +62,7 @@ void ejecutarShannon(string texto) {
     clock_t end = clock();
     cout << "Tiempo de ejecución obtenerProb: " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
     total += (double(end - start))/(CLOCKS_PER_SEC);
-    sort(F.begin(), F.end(), [] (Simbolo &x, Simbolo &y) { return x.probabilidad > y.probabilidad; });
+    //sort(F.begin(), F.end(), [] (Simbolo &x, Simbolo &y) { return x.probabilidad > y.probabilidad; });
 
     int l = 0;
     int r = F.size() - 1;
@@ -104,8 +109,11 @@ void ejecutarHuffman(string texto) {
     
     double totalT = 0.0;
     vector<Node> F;
-    Node s; 
-    string binario; 
+    vector<PosCodificadoH> P;
+    Node s;  
+    string binario, codigobinario2; 
+    string textdecode2 , textdecode3; 
+
 
     
     //crea una cola de prioridad para guardar los nodos del arbol 
@@ -136,23 +144,45 @@ void ejecutarHuffman(string texto) {
     totalT += (double(end - start))/(CLOCKS_PER_SEC);
     //imprimirCodeHuffman(CodeHuffman);
 
-    start = clock();
-    codigoBinario(CodeHuffman, texto, &binario);
-    end = clock();
-    cout << "Tiempo de ejecución de pasar code a binario   : " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
-    totalT += (double(end - start))/(CLOCKS_PER_SEC);
+    if(1){                    // si el if = 0  es con la experiemtnacion 2 , si es 1 el huffman normal.   
+       
 
-    cout << "empieza decode "<< endl;
-    start = clock();
-    decode(root, binario, textodeco);
-    end = clock(); 
-    cout << "Tiempo de ejecución de decode   : " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
-    totalT += (double(end - start))/(CLOCKS_PER_SEC);
+        start = clock();
+        codigoBinario(CodeHuffman, texto, &binario);
+        end = clock();
+        cout << "Tiempo de ejecución de pasar code a binario   : " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
+        totalT += (double(end - start))/(CLOCKS_PER_SEC);
 
 
-    if(0){
-        for(int j = 0; j<textodeco.size(); j++)
-            cout << textodeco[j];
+        
+        cout << "empieza decode "<< endl;
+        start = clock();
+        decode(root, binario, textodeco);
+        //textodeco = decode2(root, binario,  100, binario.size());   //para la experimenacion  1 
+        end = clock(); 
+        cout << "Tiempo de ejecución de decode   : " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
+        totalT += (double(end - start))/(CLOCKS_PER_SEC);
+
+
+
+    }else{
+        cout<<" "<<endl;
+        cout<<" "<<endl;
+        cout<<" encode 2 y decode 3 parte de la experimentacion 2  "<<endl;
+
+        start = clock();
+        codigobinario2 = encode2(CodeHuffman,P,texto); // traspasa a binario los codigo de huffman
+        end = clock();
+        cout << "Tiempo de ejecución de encode 2  es    : " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
+        totalT += (double(end - start))/(CLOCKS_PER_SEC);    
+
+        start = clock();
+        textdecode3=decode3(root,P, 1,20, codigobinario2);
+        end = clock();
+        cout << "Tiempo de ejecución de decode  3  es    : " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
+        totalT += (double(end - start))/(CLOCKS_PER_SEC);
+
+
     }
 
     cout << " tiempo total: " << totalT <<"s" << endl; 

@@ -18,6 +18,13 @@ struct comp{                               // objeto que sirve para ordenar la c
     }
 };
 
+
+struct PosCodificadoH {
+    char simbolo;
+    int posInicial;
+    int posFinal;
+};
+
 Node*  getNode(char symbol, int frequency,  Node *left , Node *right){  //asigna un nuevo  nodo al arbol 
     Node* nodo = new Node();
     nodo -> symbol = symbol;
@@ -27,7 +34,6 @@ Node*  getNode(char symbol, int frequency,  Node *left , Node *right){  //asigna
 
     return nodo; 
 }
-
 
 void encode(Node* root, string str, unordered_map<char,string> &CodeHuffman){
 
@@ -39,6 +45,31 @@ void encode(Node* root, string str, unordered_map<char,string> &CodeHuffman){
     encode(root-> left , str + '0', CodeHuffman);
     encode(root-> right , str + '1', CodeHuffman);
 }
+
+
+
+string encode2(unordered_map<char,string> &CodeHuffman, vector<PosCodificadoH> &P,  string text){
+
+
+
+    string textobinario2 = ""; 
+    PosCodificadoH p;
+
+    for(char symbol : text){
+        p.simbolo = symbol;
+        p.posInicial = textobinario2.length();
+        textobinario2 += CodeHuffman[symbol];
+
+        p.posFinal = textobinario2.length()-1 ; 
+        P.push_back(p);
+    }
+    return textobinario2;
+    
+
+
+    
+}
+
 
 void decode(Node* root,  string Binario, string &textodeco ){    // desceodifica los simbolos codificados 
     
@@ -65,6 +96,71 @@ void decode(Node* root,  string Binario, string &textodeco ){    // desceodifica
 
 
 
+string decode2(Node* root,  string Binario,  int k , int u ){    // desceodifica los simbolos codificados 
+    
+    if(k<0 || k>(u-1)){
+        cout<<"fuera de rango"<<endl;
+        return "";
+    }
+
+    string textoDeco2 = ""; 
+    int index=0;
+
+
+    Node* head=root;
+    while(textoDeco2.size() !=k ){  
+
+         if(Binario[index]=='0'){
+             head=head->left;
+         }
+
+         else{
+             head=head->right;
+         }
+         if(head->left==nullptr && head->right==nullptr){
+             textoDeco2.push_back(head->symbol);
+             head=root;
+         }
+         index++;
+    }
+
+    return textoDeco2;
+
+}
+
+string decode3(Node* root,vector<PosCodificadoH> &P, int i, int j ,string Binario ){    // desceodifica los simbolos codificados 
+
+    if(i<1 ||  i>j || j>P.size() -1 ){
+
+        cout<< "Posicion de i, j fuera de limite..." << endl;
+        return "";
+    }
+    
+
+    Binario = Binario.substr(P[i].posInicial,P[j].posFinal - P[i].posInicial + 1); 
+
+    int index=0;
+    string textodeco="";
+    Node* head=root;
+    while(index<Binario.length()){  
+
+         if(Binario[index]=='0'){
+             head=head->left;
+         }
+
+         else{
+             head=head->right;
+         }
+         if(head->left==nullptr && head->right==nullptr){
+             textodeco.push_back(head->symbol);
+             head=root;
+         }
+         index++;
+    }
+
+    return textodeco;
+
+}
 
 int busquedaSecuencial(vector<Node> &F, int x){
 	int i;
@@ -110,7 +206,6 @@ void CuentaFrecuencia(vector<Node> &F, string text , Node &s){
             s.symbol = c;
             F.push_back(s);
         } else F[indice].frequency++;
-
         
     }
     
@@ -119,8 +214,7 @@ void CuentaFrecuencia(vector<Node> &F, string text , Node &s){
 
 Node* GeneradorArbol(vector<Node> &F, priority_queue<Node* ,vector<Node*>, comp> &pq ){
 
-    
-    
+
     for(auto i : F ){ // agrega a la cola de prioridad los nodos de cada simbolo 
         
         pq.push(getNode(i.symbol, i.frequency, nullptr,nullptr));
@@ -141,18 +235,12 @@ Node* GeneradorArbol(vector<Node> &F, priority_queue<Node* ,vector<Node*>, comp>
 
     return root; 
 
-    
-   
-    
-    
-   
 
 
-    
-    
-    
-    
-     
+}
+
+
+
                     
 
     
@@ -160,9 +248,4 @@ Node* GeneradorArbol(vector<Node> &F, priority_queue<Node* ,vector<Node*>, comp>
 
         
     
-
-
-
-}
-
 
