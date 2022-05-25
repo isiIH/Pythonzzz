@@ -76,6 +76,7 @@ void ejecutarShannon(string texto) {
     
     start = clock();
     textoCod = encode(F, texto);
+    // PARA CALCULAR P DESCOMENTAR LA SIGUIENTE LINEA (esto para que funcione decode3)
     /* textoCod = encode2(F, P, texto); */
     end = clock();
     cout << "Tiempo de ejecución encode: " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
