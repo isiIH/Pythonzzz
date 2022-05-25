@@ -144,7 +144,7 @@ void ejecutarHuffman(string texto) {
     totalT += (double(end - start))/(CLOCKS_PER_SEC);
     //imprimirCodeHuffman(CodeHuffman);
 
-    if(1){                    // si el if = 0  es con la experiemtnacion 2 , si es 1 el huffman normal.   
+    if(1){                    // si el if = 0  es con la experimentacion  2 , si es 1 el huffman normal.   
        
 
         start = clock();
@@ -158,7 +158,7 @@ void ejecutarHuffman(string texto) {
         cout << "empieza decode "<< endl;
         start = clock();
         decode(root, binario, textodeco);
-        //textodeco = decode2(root, binario,  100, binario.size());   //para la experimenacion  1 
+        //textodeco = decode2(root, binario,  100, binario.size());   //para la experimentacion  1 
         end = clock(); 
         cout << "Tiempo de ejecución de decode   : " << (double(end - start))/(CLOCKS_PER_SEC) << "s" << endl;
         totalT += (double(end - start))/(CLOCKS_PER_SEC);
